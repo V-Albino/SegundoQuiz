@@ -1,0 +1,52 @@
+[
+  {
+    "question": "Qual é o maior planeta do Sistema Solar?",
+    "options": ["Júpiter", "Terra", "Marte", "Saturno", "Netuno"],
+    "answer": 0
+  },
+  {
+    "question": "Quem pintou a Mona Lisa?",
+    "options": ["Leonardo da Vinci", "Michelangelo", "Van Gogh", "Picasso", "Raphael"],
+    "answer": 0
+  },
+  {
+    "question": "Em que continente fica o Egito?",
+    "options": ["África", "Ásia", "Europa", "América do Sul", "Oceania"],
+    "answer": 0
+  },
+  {
+    "question": "Qual é o menor país do mundo?",
+    "options": ["Vaticano", "Mônaco", "San Marino", "Liechtenstein", "Malta"],
+    "answer": 0
+  },
+  {
+    "question": "Quem foi o primeiro homem a pisar na Lua?",
+    "options": ["Neil Armstrong", "Aldrin", "Gagarin", "Shepard", "Collins"],
+    "answer": 0
+  },
+  {
+    "question": "Qual é a capital do Canadá?",
+    "options": ["Ottawa", "Toronto", "Vancouver", "Montreal", "Quebec"],
+    "answer": 0
+  },
+  {
+    "question": "Em que ano ocorreu a Proclamação da República no Brasil?",
+    "options": ["1889", "1888", "1822", "1922", "1500"],
+    "answer": 0
+  },
+  {
+    "question": "Qual elemento químico tem o símbolo O?",
+    "options": ["Oxigênio", "Ouro", "Ósmio", "Prata", "Hidrogênio"],
+    "answer": 0
+  },
+  {
+    "question": "Qual desses animais é um mamífero?",
+    "options": ["Golfinho", "Crocodilo", "Pinguim", "Tubarão", "Galinha"],
+    "answer": 0
+  },
+  {
+    "question": "Quantos continentes existem na Terra?",
+    "options": ["7", "5", "6", "8", "9"],
+    "answer": 0
+  }
+]
