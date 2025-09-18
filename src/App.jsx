@@ -12,12 +12,29 @@ function randomiza(vet){
   return arr;
 }
 
-export default function App() {
+export default function App(){
+  const [start, setStart] = useState(false)
+  if(!start){
+    return (
+      <>
+        <h1>Perguntemos</h1>
+        <p>Aperte o botão abaixo para começar</p>
+        <button onClick={() => setStart(true)}>Começar</button>
+      </>
+    )
+  }
+  else if(start){
+    return <Game />  
+  }
+}
+
+function Game() {
   const [currentQuestion, setCurrentQuestion] = useState(0)
   const [options, setOptions] = useState(questions.map(q => randomiza(q.options)))
   const [result, setResult] = useState(Array(questions.length).fill(""))
   const [history, setHistory] = useState([])
   const [score, setScore] = useState(0)
+  const [emPartida, setEmPartida] = useState(true)
 
   function verifica(opt){
     const resposta = [...result]
@@ -30,29 +47,24 @@ export default function App() {
     setResult(resposta)
   }
 
-  function NextPage(){
-    setCurrentQuestion(currentQuestion + 1)
-  }
-  
-  function PreviousPage(){
-    setCurrentQuestion(currentQuestion - 1)
-  }
+
   function reset(){
-  
-  const attempt = {
-    answers: [...result],
-    score: score
-  };
-  const aux = [...history, attempt]
-  setHistory(aux)
+    const attempt = {
+      answers: [...result],
+      score: score
+    };
+    const aux = [...history, attempt]
+    setHistory(aux)
 
-  setCurrentQuestion(0)
-  setResult(Array(questions.length).fill(""))
-  setOptions(questions.map(q => randomiza(q.options)))
-  setScore(0)
+    setCurrentQuestion(0)
+    setResult(Array(questions.length).fill(""))
+    setOptions(questions.map(q => randomiza(q.options)))
+    setEmPartida(false)
+    setScore(0)
   }
 
-  return (
+  if(emPartida){
+    return (
     <>
       <h1>Perguntas Gerais</h1>
       <div className="">
@@ -72,12 +84,12 @@ export default function App() {
       </p>
       </div>
 
-      <p>Pontuação: {score} / {questions.length}</p>
+      <p>Acertos: {score} / {questions.length}</p>
       <button onClick={
-        () => PreviousPage()} disabled={currentQuestion===0}>Anterior
+        () => setCurrentQuestion(currentQuestion - 1)} disabled={currentQuestion===0}>Anterior
       </button>
       <button onClick={
-        () => NextPage()} disabled={currentQuestion===questions.length-1}>Proxima
+        () => setCurrentQuestion(currentQuestion + 1)} disabled={currentQuestion===questions.length-1}>Proxima
       </button>
 
       <div style={{marginTop:"10px", marginBottom:"10px"}}>
@@ -90,23 +102,32 @@ export default function App() {
       <div>
         <button onClick={() => reset()}>Finalizar Tentativa</button>
       </div>
-      <div>
-        <ul>
-          {history.map((attempt, index) => (
-            <li key={index}>
-              Tentativa {index + 1}: [
-              {attempt.answers.map((resp, i) => (
-                <span key={i}>
-                  {resp === "Resposta Correta" ? 'C' : (resp === "" ? '-' : 'E')}
-                  {i < attempt.answers.length - 1 ? ' , ' : ''}
-                </span>
-              ))}
-              ]
-              ; Pontuação: {attempt.score}
-            </li>
-          ))}
-        </ul>
-      </div>
     </>
-  )
+    )
+  }
+
+  else if(!emPartida){
+    return (
+      <>
+      
+      <h2>Resultados</h2>
+      <ul>
+        {history.map((attempt, index) => (
+          <li key={index}>
+            Tentativa {index + 1}: [
+            {attempt.answers.map((resp, i) => (
+              <span key={i}>
+                {resp === "Resposta Correta" ? 'C' : (resp === "" ? '-' : 'E')}
+                {i < attempt.answers.length - 1 ? ' , ' : ''}
+              </span>
+            ))}
+            ]
+            ;   Acertos: {attempt.score}
+          </li>
+        ))}
+      </ul>
+      <button onClick={() => setEmPartida(true)}>Jogar novamente</button>
+      </>
+    )
+  }
 }
