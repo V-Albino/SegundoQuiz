@@ -16,7 +16,7 @@ export default function App() {
   const [currentQuestion, setCurrentQuestion] = useState(0)
   const [options, setOptions] = useState(questions.map(q => randomiza(q.options)))
   const [result, setResult] = useState(Array(questions.length).fill(""))
-  const [history, setHistory] = useState(result)
+  const [history, setHistory] = useState([])
   const [score, setScore] = useState(0)
 
   function verifica(opt){
@@ -38,11 +38,18 @@ export default function App() {
     setCurrentQuestion(currentQuestion - 1)
   }
   function reset(){
-    //adiciona resultado
-    setCurrentQuestion(0)
-    setResult(Array(questions.length).fill(""))
-    setOptions(questions.map(q => randomiza(q.options)))
-    setScore(0)
+  
+  const attempt = {
+    answers: [...result],
+    score: score
+  };
+  const aux = [...history, attempt]
+  setHistory(aux)
+
+  setCurrentQuestion(0)
+  setResult(Array(questions.length).fill(""))
+  setOptions(questions.map(q => randomiza(q.options)))
+  setScore(0)
   }
 
   return (
@@ -84,11 +91,22 @@ export default function App() {
         <button onClick={() => reset()}>Finalizar Tentativa</button>
       </div>
       <div>
-        <ol>
-          <li>Historico</li>
-        </ol>
+        <ul>
+          {history.map((attempt, index) => (
+            <li key={index}>
+              Tentativa {index + 1}: [
+              {attempt.answers.map((resp, i) => (
+                <span key={i}>
+                  {resp === "Resposta Correta" ? 'C' : (resp === "" ? '-' : 'E')}
+                  {i < attempt.answers.length - 1 ? ' , ' : ''}
+                </span>
+              ))}
+              ]
+              ; Pontuação: {attempt.score}
+            </li>
+          ))}
+        </ul>
       </div>
     </>
-    
   )
 }
