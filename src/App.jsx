@@ -1,121 +1,27 @@
-import { useState } from 'react'
-import questions from './questions.json'
+import { Activity } from 'react'
+import { QuizProvider, useQuiz } from './QuizContext';
+import Quiz from './Quiz';
+import ResultGame from './ResultGame';
+import Start from './Start'
 import './App.css'
 
-
-function randomiza(vet){
-  const arr = [...vet]
-  for (let i = arr.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [arr[i], arr[j]] = [arr[j], arr[i]];
-  }
-  return arr;
-}
-
 export default function App() {
-  const [currentQuestion, setCurrentQuestion] = useState(0)
-  const [options, setOptions] = useState(questions.map(q => randomiza(q.options)))
-  const [result, setResult] = useState(Array(questions.length).fill(""))
-  const [history, setHistory] = useState([])
-  const [score, setScore] = useState(0)
-  const [game, setGame] = useState(0)
-
-  function verifica(opt){
-    const resposta = [...result]
-    if(opt === questions[currentQuestion].options[0]){
-      resposta[currentQuestion] = "Resposta Correta"
-      setScore(score + 1)
-    }else{
-      resposta[currentQuestion] = "Resposta Errada"
-    }
-    setResult(resposta)
-  }
-
-
-  function reset(){
-    const attempt = {
-      answers: [...result],
-      score: score
-    };
-    const aux = [...history, attempt]
-    setHistory(aux)
-
-    setCurrentQuestion(0)
-    setResult(Array(questions.length).fill(""))
-    setOptions(questions.map(q => randomiza(q.options)))
-    setGame(2)
-    setScore(0)
-  }
-
-  switch(game){
-    case 0: return (
+    const {activity} = useQuiz() //não utilize useQuiz no pai 
+    return (
       <>
-        <h1>Perguntemos</h1>
-        <p>Aperte o botão abaixo para começar</p>
-        <button onClick={() => setGame(1)}>Começar</button>
-      </>
-    );
-    case 1: return (
-      <>
-        <h1>Perguntas Gerais</h1>
-        <div className="">
-          <p>
-            {currentQuestion + 1} - {questions[currentQuestion].question}
-          </p>
-          {options[currentQuestion].map((option, _) => (
-            <button key={option} onClick={() => verifica(option)} disabled = {result[currentQuestion] !== ""}>
-              {option}
-            </button>
-          ))}
-        </div>
+      <QuizProvider>
+        <Activity mode={activity==="start" ? 'visible' : 'hidden'}>
+          <Start />
+        </Activity>
 
-        <div style={{height: "20px"}}>
-        <p className="read-the-docs"> 
-          {result[currentQuestion]} 
-        </p>
-        </div>
+        <Activity mode={activity==="quiz" ? 'visible' : 'hidden'}>
+            <Quiz />
+        </Activity>
 
-        <p>Acertos: {score} / {questions.length}</p>
-        <button onClick={
-          () => setCurrentQuestion(currentQuestion - 1)} disabled={currentQuestion===0}>Anterior
-        </button>
-        <button onClick={
-          () => setCurrentQuestion(currentQuestion + 1)} disabled={currentQuestion===questions.length-1}>Proxima
-        </button>
-
-        <div style={{marginTop:"10px", marginBottom:"10px"}}>
-        {questions.map((_, index)=>(
-          <button key={index} onClick={() => setCurrentQuestion(index)}>
-            {index+1}
-          </button>
-        ))}
-        </div>
-        <div>
-          <button onClick={() => reset()}>Finalizar Tentativa</button>
-        </div>
-      </>
-    );
-    // Tabela de resultados
-    case 2: return (
-      <>
-      <h2>Resultados</h2>
-      <ul>
-        {history.map((attempt, index) => (
-          <li key={index}>
-            Tentativa {index + 1}: (
-            {attempt.answers.map((resp, i) => (
-              <span key={i}>
-                {resp === "Resposta Correta" ? 'C' : (resp === "" ? '-' : 'E')}
-                {i < attempt.answers.length - 1 ? ' , ' : ''}
-              </span>
-            ))}
-            )
-            ;   Acertos: {attempt.score}
-          </li>
-        ))}
-      </ul>
-      <button onClick={() => setGame(1)}>Jogar novamente</button>
+        <Activity mode={activity==="result" ? 'visible' : 'hidden'}>
+          <ResultGame />
+        </Activity>
+      </QuizProvider>
       </>
     );
   }
-}
