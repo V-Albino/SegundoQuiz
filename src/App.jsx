@@ -9,7 +9,6 @@ export default function App() {
     const {activity} = useQuiz() //não utilize useQuiz no pai 
     return (
       <>
-      <QuizProvider>
         <Activity mode={activity==="start" ? 'visible' : 'hidden'}>
           <Start />
         </Activity>
@@ -21,7 +20,6 @@ export default function App() {
         <Activity mode={activity==="result" ? 'visible' : 'hidden'}>
           <ResultGame />
         </Activity>
-      </QuizProvider>
       </>
     );
   }

@@ -1,13 +1,5 @@
 import { useQuiz } from "./QuizContext"
-
-function randomiza(vet){
-  const arr = [...vet]
-  for (let i = arr.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [arr[i], arr[j]] = [arr[j], arr[i]];
-  }
-  return arr;
-}
+import questions from './questions.json'
 
 export default function Quiz(){
   const {currentQuestion, setCurrentQuestion, options,setOptions, result, setResult, score, setActivity} = useQuiz()

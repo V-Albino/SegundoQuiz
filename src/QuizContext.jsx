@@ -3,6 +3,15 @@ import questions from "./questions.json";
 
 const QuizContext = createContext();
 
+function randomiza(vet){
+  const arr = [...vet]
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
 export function QuizProvider({children}){
     const [currentQuestion, setCurrentQuestion] = useState(0)
     const [options, setOptions] = useState(questions.map(q => randomiza(q.options)))
