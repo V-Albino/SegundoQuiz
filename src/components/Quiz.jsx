@@ -1,8 +1,12 @@
-import { useQuiz } from "./QuizContext"
-import questions from './questions.json'
+import { useState } from 'react'
+import questions from '../questions.json'
 
 export default function Quiz(){
-  const {currentQuestion, setCurrentQuestion, options,setOptions, result, setResult, score, setActivity} = useQuiz()
+    const [currentQuestion, setCurrentQuestion] = useState(0)
+    const [options, setOptions] = useState(questions.map(q => randomiza(q.options)))
+    const [result, setResult] = useState(Array(questions.length).fill(""))
+    const [history, setHistory] = useState([])
+    const [score, setScore] = useState(0)
 
   function verifica(opt){
     const resposta = [...result]
@@ -15,6 +19,15 @@ export default function Quiz(){
     setResult(resposta)
   }
 
+  function randomiza(vet){
+    const arr = [...vet]
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+  }
+
   function reset(){
     const attempt = {
       answers: [...result],
@@ -22,11 +35,9 @@ export default function Quiz(){
     };
     const aux = [...history, attempt]
     setHistory(aux)
-
     setCurrentQuestion(0)
     setResult(Array(questions.length).fill(""))
     setOptions(questions.map(q => randomiza(q.options)))
-    setActivity("result")
     setScore(0)
   }
 

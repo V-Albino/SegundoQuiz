@@ -1,25 +1,22 @@
-import { Activity } from 'react'
-import { QuizProvider, useQuiz } from './QuizContext';
-import Quiz from './Quiz';
-import ResultGame from './ResultGame';
-import Start from './Start'
 import './App.css'
+import { createBrowserRouter, RouterProvider, Route, createRoutesFromElements } from "react-router-dom";
+import Quiz from './components/Quiz';
+import ResultGame from './components/ResultGame';
+import Start from './components/Start'
+import { NotFound } from './components/NotFound';
+  
+const router = createBrowserRouter(
+  createRoutesFromElements(
+    <>
+      <Route path="/" element= {<Start />}/>
+      <Route path="/quiz" element= {<Quiz />}/>
+      <Route path="/quiz/:id" element= {<Quiz />}/>
+      {/* <Route path="/resultado" element= {<ResultGame />}/> */}
+      <Route path="*" element={<NotFound />} />
+    </>
+  )
+);
 
 export default function App() {
-    const {activity} = useQuiz() //não utilize useQuiz no pai 
-    return (
-      <>
-        <Activity mode={activity==="start" ? 'visible' : 'hidden'}>
-          <Start />
-        </Activity>
-
-        <Activity mode={activity==="quiz" ? 'visible' : 'hidden'}>
-            <Quiz />
-        </Activity>
-
-        <Activity mode={activity==="result" ? 'visible' : 'hidden'}>
-          <ResultGame />
-        </Activity>
-      </>
-    );
-  }
+  return <RouterProvider router={router} />;
+}

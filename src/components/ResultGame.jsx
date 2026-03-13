@@ -1,4 +1,4 @@
-import { useQuiz } from "./QuizContext"
+
 
 export default function ResultGame(){
     const {history, setActivity} = useQuiz();
@@ -20,7 +20,9 @@ export default function ResultGame(){
           </li>
         ))}
       </ul>
-      <button onClick={() => setActivity("quiz")}>Jogar novamente</button>
+      <Link to="/quiz">
+        <button>Jogar novamente</button>
+      </Link>
     </>
   )
 }
