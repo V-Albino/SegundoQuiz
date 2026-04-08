@@ -46,3 +46,15 @@ ul {
 button{
   margin-right: 5px;
 }
+
+.user {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 140px;
+  height: 140px;
+  padding: 8px;
+}

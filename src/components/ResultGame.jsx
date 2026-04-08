@@ -1,7 +1,5 @@
-
-
+import { Link } from "react-router-dom";
 export default function ResultGame(){
-    const {history, setActivity} = useQuiz();
   return (
     <>
       <h2>Resultados</h2>

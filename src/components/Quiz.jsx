@@ -1,6 +1,8 @@
-import { useState } from 'react'
-import questions from '../questions.json'
-import { useParams } from 'react-router-dom'
+import { useState, useEffect} from 'react';
+import questions from '../questions.json';
+import { useParams, Link } from 'react-router-dom';
+import localforage from 'localforage';
+import'../App.css'
 
 
 export default function Quiz(){
@@ -8,6 +10,11 @@ export default function Quiz(){
   const {id} = useParams();
   const temaIndex = Number(id);
   const tema = questions[temaIndex];
+  if(!tema){
+    return (
+    <h1>Quiz não encontrado</h1>
+    )
+  }
   const perguntas = tema.questions;
 
   const [currentQuestion, setCurrentQuestion] = useState(0);
@@ -15,6 +22,14 @@ export default function Quiz(){
   const [result, setResult] = useState(Array(perguntas.length).fill(""));
   const [history, setHistory] = useState([]);
   const [score, setScore] = useState(0);
+  const [nome, setNome] = useState("");
+
+  
+  useEffect(() => {
+    localforage.getItem("nome").then((valor) => {
+      if (valor) setNome(valor);
+    });
+  }, []);
 
   function verifica(opt){
     const resposta = [...result];
@@ -36,13 +51,9 @@ export default function Quiz(){
     return arr;
   }
 
-  function reset(){
-    const attempt = {
-      answers: [...result],
-      score: score
-    };
-    const aux = [...history, attempt];
-    setHistory(aux);
+  async function reset(){
+    await localforage.setItem("resultado", [score,...result])
+
     setCurrentQuestion(0);
     setResult(Array(perguntas.length).fill(""));
     setOptions(perguntas.map(q => randomiza(q.options)));
@@ -52,7 +63,7 @@ export default function Quiz(){
 return(
   <>
     <h1>{tema.theme}</h1>
-    <div className="">
+    <div>
       <p>
         {currentQuestion + 1} - {perguntas[currentQuestion].question}
       </p>
@@ -61,6 +72,10 @@ return(
           {option}
         </button>
       ))}
+    </div>
+
+    <div className='user'>
+      <h2>{nome}</h2>
     </div>
 
     <div style={{height: "20px"}}>
@@ -81,7 +96,9 @@ return(
       ))}
     </div>
     <div>
-      <button onClick={() => reset()}>Finalizar Tentativa</button>
+      <Link to="/resultado">
+        <button onClick={() => reset()}>Finalizar Tentativa</button>
+      </Link>
     </div>
   </>
 )
