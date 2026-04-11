@@ -19,8 +19,10 @@ export default function Start() {
     <>
       <h1 style={{marginBottom: "100px"}}>Perguntemos</h1>
       <div style={{margin: "100px", display: "grid", gridTemplateRows: "auto", justifyItems: "center"}}>
-        <img src="src/Icon.png" alt="icone" width="100" height="100"/>
-        <input ref={inputRef} onChange={() => salvaNome()} placeholder="Digite seu nome..."></input>
+        <div className="iconBackground">
+          <img className="icon" src="src/Icon.png" alt="icone" />
+        </div>
+        <input className="nameBar" ref={inputRef} onChange={() => salvaNome()} placeholder="Digite seu nome..."></input>
       </div>
       <p>Aperte o botão abaixo para começar</p>
       <Link to="/quiz">

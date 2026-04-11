@@ -1,26 +1,46 @@
 import { Link } from "react-router-dom";
-export default function ResultGame(){
+import { useEffect, useState } from "react";
+import localforage from "localforage";
+
+export default function ResultGame() {
+  const [attempt, setAttempt] = useState(null);
+
+  useEffect(() => {
+    async function f() {
+      const resultado = await localforage.getItem("historico");
+      setAttempt(resultado);
+    }
+    f();
+  }, []);
+
+  if (!attempt) {
+    return <div>Carregando...</div>;
+  }
+
   return (
     <>
-      <h2>Resultados</h2>
+      <h1>Parabéns!</h1>
+      <h2>Seus resultados</h2>
+      
       <ul>
-        {history.map((attempt, index) => (
-          <li key={index}>
-            Tentativa {index + 1}: (
-            {attempt.answers.map((resp, i) => (
-              <span key={i}>
-                {resp === "Resposta Correta" ? 'C' : (resp === "" ? '-' : 'E')}
-                {i < attempt.answers.length - 1 ? ' , ' : ''}
+            {attempt.map((info, j) => (
+              <li key={j}>
+              <span>
+                {info.nome}
+                {info.pergunta}
+                {info.resposta}
+                {info.correto}
               </span>
+              </li>
             ))}
-            )
             ;   Acertos: {attempt.score}
-          </li>
-        ))}
       </ul>
+      
       <Link to="/quiz">
+      {/*useNavigate está se mostrando mais versátil do que usar o Link,
+      Aqui temos que impedir que o usuário que não preencheu o nome prossiga*/ }
         <button>Jogar novamente</button>
       </Link>
     </>
-  )
+  );
 }

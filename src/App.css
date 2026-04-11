@@ -58,3 +58,20 @@ button{
   height: 140px;
   padding: 8px;
 }
+.nameBar {
+  border: none;
+  outline: none;
+  width: 200px;
+  height: 20px;
+}
+.icon{
+  width: 100px;
+  height:100px
+}
+.iconBackground{
+  width: 100px;
+  height:100px;
+  background-color: rgb(253, 253, 253);
+  border-radius: 100%;
+  margin-bottom: 10px;
+}
