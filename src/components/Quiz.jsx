@@ -21,7 +21,7 @@ export default function Quiz(){
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [options, setOptions] = useState(perguntas.map(q => randomiza(q.options)));
   const [history, setHistory] = useState([]);
-  const [partida, setPartida] = useState([])
+  const [partida, setPartida] = useState({tema: tema.theme, respostas:[]});
   const [score, setScore] = useState(0);
   const [nome, setNome] = useState("");
   const [counter,setCounter] = useState(60)
@@ -39,7 +39,7 @@ export default function Quiz(){
 
   useEffect(() => {
     if (counter === 0) {
-      reset();
+      atualiza();
       navigate('/resultado')
     }
   }, [counter]);
@@ -57,13 +57,17 @@ export default function Quiz(){
     if(opt === perguntas[currentQuestion].options[0]){
       registro.correto = true;
       setScore(score + 1);
-    }
-    
-    else{
+    }else{
       registro.correto = false;
     }
 
-    const novaPartida = [...partida, registro];
+    const novoRegistro = [...partida.respostas, registro];
+
+    const novaPartida = {
+      tema: tema.theme,
+      respostas:novoRegistro
+    }
+
     setPartida(novaPartida);
   }
 
@@ -76,10 +80,9 @@ export default function Quiz(){
     return arr;
   }
 
-  function reset(){
+  function atualiza(){
     let novoHistorico = [...history];
     novoHistorico.push(partida);
-
     localforage.setItem("historico", novoHistorico)
 
     setCurrentQuestion(0);
@@ -123,7 +126,7 @@ return(
     </div>
     <div>
       <Link to="/resultado">
-        <button onClick={() => reset()}>Finalizar Tentativa</button>
+        <button onClick={() => atualiza()}>Finalizar Tentativa</button>
       </Link>
     </div>
   </>
