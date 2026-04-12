@@ -20,18 +20,18 @@ export default function Quiz(){
 
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [options, setOptions] = useState(perguntas.map(q => randomiza(q.options)));
-  const [resultado, setResultado] = useState([]);
   const [history, setHistory] = useState([]);
+  const [partida, setPartida] = useState([])
   const [score, setScore] = useState(0);
   const [nome, setNome] = useState("");
   const [counter,setCounter] = useState(60)
 
   
   useEffect(() => {
-    function f() {
-      const valor = localforage.getItem("nome");
+    async function f() {
+      const valor = await localforage.getItem("nome");
       if (valor) setNome(valor);
-      const hist = localforage.getItem("historico");
+      const hist = await localforage.getItem("historico");
       if (hist) setHistory(hist);
     }
     f();
@@ -46,7 +46,6 @@ export default function Quiz(){
 
 
   function verifica(opt){
-    const resposta = [...resultado];
     const registro = {
       nome: nome,
       data: new Date(),
@@ -54,22 +53,18 @@ export default function Quiz(){
       resposta: opt,
       correto: true
     };
-
-    const novoHistorico = [...history, registro];
+    
     if(opt === perguntas[currentQuestion].options[0]){
       registro.correto = true;
-      resposta[currentQuestion] = "Resposta Correta";
       setScore(score + 1);
     }
     
     else{
       registro.correto = false;
-      resposta[currentQuestion] = "Resposta Errada";
     }
 
-    setResultado(resposta);
-    setHistory(novoHistorico);
-    localforage.setItem("historico", novoHistorico)
+    const novaPartida = [...partida, registro];
+    setPartida(novaPartida);
   }
 
   function randomiza(vet){
@@ -81,20 +76,13 @@ export default function Quiz(){
     return arr;
   }
 
-  async function reset(){
-    const attempt = {
-      answers: [...resultado],
-      score: score
-    };
-      /*
-    
-    const aux = [...history, attempt]
-    setHistory(aux)
-    */
-    await localforage.setItem("resultado", attempt)
-    
+  function reset(){
+    let novoHistorico = [...history];
+    novoHistorico.push(partida);
+
+    localforage.setItem("historico", novoHistorico)
+
     setCurrentQuestion(0);
-    setResultado(Array(perguntas.length).fill(""));
     setOptions(perguntas.map(q => randomiza(q.options)));
     setScore(0);
   }
@@ -120,12 +108,6 @@ return(
 
     <div className='user'>
       <h2>{nome}</h2>
-    </div>
-
-    <div style={{height: "20px"}}>
-      <p className="read-the-docs"> 
-        {resultado[currentQuestion]} 
-      </p>
     </div>
 
     <p>Acertos: {score} / {perguntas.length}</p>
