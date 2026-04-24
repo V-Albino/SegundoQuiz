@@ -1,0 +1,19 @@
+.tentativas{
+    >li{
+        margin-bottom: 2em;
+    }
+    .pontuacao{
+        font-weight: bolder;
+        display: flex;
+        justify-content: flex-start;
+    }
+
+}
+.respostas{
+    li{
+       display: grid;
+       grid-template-columns: repeat(4,auto) repeat(2,1fr) ;
+       gap: 1em;
+       justify-items: left;
+    }
+}

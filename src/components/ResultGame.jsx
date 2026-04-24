@@ -1,44 +1,62 @@
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import localforage from "localforage";
+import "./ResultGame.css";
+
 
 export default function ResultGame() {
-  const [attempt, setAttempt] = useState(null);
+  const [historico, setHistorico] = useState(null);
 
   useEffect(() => {
     async function f() {
       const resultado = await localforage.getItem("historico");
-      setAttempt(resultado);
+      setHistorico(resultado);
     }
     f();
   }, []);
 
-  if (!attempt) {
+  if (!historico) {
     return <div>Carregando...</div>;
   }
+
+  const options = {
+  year: "numeric",
+  month: "numeric",
+  day: "numeric",
+  hour: "numeric",
+  minute: "numeric",
+  second: "numeric",
+  hour12: false,
+  timeZone: "America/Sao_Paulo",
+}
+  const formatter = new Intl.DateTimeFormat('pt-BR', options);
 
   return (
     <>
       <h1>Parabéns!</h1>
       <h2>Seus resultados</h2>
       
-      <ul>
-            {attempt.map((info, j) => (
-              <li key={j}>
-              <span>
-                {info.nome}
-                {info.pergunta}
-                {info.resposta}
-                {info.correto}
-              </span>
+      <ol className="tentativas">
+      {historico.map((tentativa, i) => (
+        <li key={`tentativa${i}`}>
+          <ol className="respostas">
+            {tentativa.respostas.map((info, j) => (
+              <li key={`resposta${j}`}>
+                <div>{info.correto?"✅":"⛔"}</div>
+                <div>{info.nome}</div>
+                <div>{formatter.format(info.data)}</div>
+                <div>{tentativa.tema}</div>
+                <div>{info.pergunta}</div>
+                <div>{info.resposta}</div>
               </li>
             ))}
-            ;   Acertos: {attempt.score}
-      </ul>
+            </ol>
+          <div className="pontuacao">Pontuação: {tentativa.score}</div>
+        </li>
+      ))}
+      </ol>
       
       <Link to="/quiz">
-      {/*useNavigate está se mostrando mais versátil do que usar o Link,
-      Aqui temos que impedir que o usuário que não preencheu o nome prossiga*/ }
         <button>Jogar novamente</button>
       </Link>
     </>

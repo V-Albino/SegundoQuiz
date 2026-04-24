@@ -46,6 +46,8 @@ export default function Quiz(){
 
 
   function verifica(opt){
+    let novoScore = score;
+
     const registro = {
       nome: nome,
       data: new Date(),
@@ -53,10 +55,11 @@ export default function Quiz(){
       resposta: opt,
       correto: true
     };
-    
+
     if(opt === perguntas[currentQuestion].options[0]){
       registro.correto = true;
-      setScore(score + 1);
+      novoScore += 1;
+      setScore(novoScore);
     }else{
       registro.correto = false;
     }
@@ -65,6 +68,7 @@ export default function Quiz(){
 
     const novaPartida = {
       tema: tema.theme,
+      score:novoScore,
       respostas:novoRegistro
     }
 
@@ -99,6 +103,7 @@ return(
     </div>
     
     <div>
+      
       <p>
         {currentQuestion + 1} - {perguntas[currentQuestion].question}
       </p>
